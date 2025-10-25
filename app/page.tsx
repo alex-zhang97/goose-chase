@@ -1,4 +1,4 @@
-"use client";
+'use client'; 
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -12,28 +12,28 @@ export default function ItineraryPage() {
 
   // 🧭 State for inputs
   const [location, setLocation] = useState("New York, NY, USA");
-  const [chaseLength, setChaseLength] = useState();
+  const [chaseLength, setChaseLength] = useState(1);
 
   // 🗺️ Build map query
   const mapSrc = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(
     location
   )}&zoom=12`;
 
-  const sendMessage = async () => {
-    // console.log("Sending message:", message);
-    const itineraryJSON = {
-      location: location,
-      chaseLength: chaseLength,
-    };
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ itineraryJSON }),
-    });
-    const data = await res.json();
-    console.log(data.itinerary);
-    return data.itinerary;
-  };
+  // const sendMessage = async () => {
+  //   // console.log("Sending message:", message);
+  //   const itineraryJSON = {
+  //     location: location,
+  //     chaseLength: chaseLength,
+  //   };
+  //   const res = await fetch("/api/chat", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ itineraryJSON }),
+  //   });
+  //   const data = await res.json();
+  //   console.log(data.itinerary);
+  //   return data.itinerary;
+  // };
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen p-6 oklch(21.6% 0.006 56.043) ">
@@ -46,9 +46,11 @@ export default function ItineraryPage() {
         <Input type="text" placeholder="City, State, Country" onChange={(e) => setChaseLength(e.target.value)}  />
         <Input type="integer" placeholder="# of locations" onChange={(e) => setLocation(Number(e.target.value))} />
 
-        <Button variant="outline" onClick={sendMessage}>
+        <Link href={{ pathname: '/itinerary', query: {location: location, chase_length: chaseLength}}}>
+        <Button variant="outline">
           Generate Itinerary
         </Button>
+        </Link>
       </div>
 
       {/* 🗺️ Map Display */}
