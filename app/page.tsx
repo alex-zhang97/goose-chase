@@ -31,8 +31,8 @@ export default function ItineraryPage() {
       body: JSON.stringify({ itineraryJSON }),
     });
     const data = await res.json();
-    console.log(data.reply);
-    return data.reply;
+    console.log(data.itinerary);
+    return data.itinerary;
   };
 
   return (
@@ -43,7 +43,7 @@ export default function ItineraryPage() {
       <div className="flex flex-col md:flex-row gap-4 w-full max-w-md mb-6">
         {/* city Input */}
 
-        <Input type="integer" placeholder="City, State, Country" onChange={(e) => setChaseLength(e.target.value)}  />
+        <Input type="text" placeholder="City, State, Country" onChange={(e) => setChaseLength(e.target.value)}  />
         <Input type="integer" placeholder="# of locations" onChange={(e) => setLocation(Number(e.target.value))} />
 
         <Button variant="outline" onClick={sendMessage}>
