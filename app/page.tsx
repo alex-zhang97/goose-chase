@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { send } from "process";
+import { PromptMessage } from "@/lib/types";
 
 export default function ItineraryPage() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAP_API;
@@ -18,8 +19,8 @@ export default function ItineraryPage() {
     location
   )}&zoom=12`;
 
-  const sendMessage = async (message: JSON) => {
-    console.log("Sending message:", message);
+  const sendMessage = async () => {
+    // console.log("Sending message:", message);
     const itineraryJSON = {
       location: location,
       chaseLength: chaseLength,
@@ -27,9 +28,10 @@ export default function ItineraryPage() {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ itineraryJSON }),
     });
     const data = await res.json();
+    console.log(data.reply);
     return data.reply;
   };
 
