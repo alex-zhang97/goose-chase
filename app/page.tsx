@@ -1,20 +1,37 @@
 "use client";
 
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { send } from "process";
 
 export default function ItineraryPage() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAP_API;
 
   // 🧭 State for inputs
-  const [city, setCity] = useState("Paris");
-  const [locations, setLocations] = useState(3);
+  const [location, setLocation] = useState("New York, NY, USA");
+  const [chaseLength, setChaseLength] = useState();
 
   // 🗺️ Build map query
   const mapSrc = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(
-    city
+    location
   )}&zoom=12`;
+
+  const sendMessage = async (message: JSON) => {
+    console.log("Sending message:", message);
+    const itineraryJSON = {
+      location: location,
+      chaseLength: chaseLength,
+    };
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
+    });
+    const data = await res.json();
+    return data.reply;
+  };
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen p-6 oklch(21.6% 0.006 56.043) ">
@@ -22,23 +39,14 @@ export default function ItineraryPage() {
 
       {/* 🔍 Input Section */}
       <div className="flex flex-col md:flex-row gap-4 w-full max-w-md mb-6">
-        {/* City Input */}
+        {/* city Input */}
 
-        <input type="text" placeholder = "Enter City"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center"
-        />
+        <Input type="integer" placeholder="City, State, Country" onChange={(e) => setChaseLength(e.target.value)}  />
+        <Input type="integer" placeholder="# of locations" onChange={(e) => setLocation(Number(e.target.value))} />
 
-
-        <input type="number" placeholder = "Number of Locations"
-          value={locations}
-          onChange={(e) => setLocations(Number(e.target.value))}
-          className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center"
-        />
-
-        <Button variant="outline">Generate itinerary</Button>
-
+        <Button variant="outline" onClick={sendMessage}>
+          Generate Itinerary
+        </Button>
       </div>
 
       {/* 🗺️ Map Display */}
@@ -55,10 +63,9 @@ export default function ItineraryPage() {
       </div>
 
       {/* 🧭 Info Summary */}
-      <p className="mt-4 text-gray-600">
-        Showing itinerary for <strong>{locations}</strong> locations in{" "}
-        <strong>{city}</strong>.
-      </p>
+      {/* <p className="mt-4 text-gray-600">
+        Showing itinerary for <strong>{location}</strong>
+      </p> */}
     </main>
   );
 }
