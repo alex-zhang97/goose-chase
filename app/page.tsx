@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
 export default function ItineraryPage() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAP_API;
@@ -21,27 +23,22 @@ export default function ItineraryPage() {
       {/* 🔍 Input Section */}
       <div className="flex flex-col md:flex-row gap-4 w-full max-w-md mb-6">
         {/* City Input */}
-        <input
-          type="text"
-          placeholder="Enter a city or region"
+
+        <input type="text" placeholder = "Enter City"
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          className="flex-grow p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center"
         />
 
-        {/* Number of Locations */}
-        <input
-          type="number"
-          min={1}
+
+        <input type="number" placeholder = "Number of Locations"
           value={locations}
           onChange={(e) => setLocations(Number(e.target.value))}
-          className="w-40 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center"
-          placeholder="# of locations"
+          className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center"
         />
 
-        <button 
-        className = "border-gray-3000 bg-color-blue"
-        src="">Generate Itinerary</button>
+        <Button variant="outline">Generate itinerary</Button>
+
       </div>
 
       {/* 🗺️ Map Display */}
