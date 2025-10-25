@@ -25,5 +25,6 @@ export async function POST(req: Request) {
         throw new Error("No content returned from OpenAI response");
     }
 
-    const itinerary = JSON.parse(content);  return Response.json({ itinerary });
+    const itinerary = JSON.parse(content);  
+    return Response.json({ itinerary });
 }
