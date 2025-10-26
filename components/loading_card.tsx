@@ -22,7 +22,7 @@ export default function LoadingCard() {
       <div className="text-center">
         <motion.div
           className="mx-auto mb-6 h-14 w-14 grid place-items-center rounded-2xl border border-zinc-200"
-          initial={{ rotate: 0, opacity: 0, scale: 0.9 }}
+          initial={{ rotate: 0, opacity: 0.9, scale: 1}}
           animate={{ rotate: 360, opacity: 1, scale: 1 }}
           transition={{ repeat: Infinity, duration: 1.4, ease: "linear" }}
         >

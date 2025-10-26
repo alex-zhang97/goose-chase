@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PromptMessage } from "@/lib/types";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogClose,
@@ -19,6 +20,7 @@ import LoadingCard from "@/components/loading_card";
 
 export default function ItineraryPage() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAP_API;
+  const router = useRouter();
 
   const [location, setLocation] = useState("New York, NY, USA");
   const [chaseLength, setChaseLength] = useState<number | undefined>();
@@ -28,7 +30,7 @@ export default function ItineraryPage() {
     location
   )}&zoom=12`;
 
-  const sendMessage = async () => {
+  const fetchItinerary = async () => {
     setLoading(true);
     try {
       const res = await fetch("/api/chat", {
@@ -39,10 +41,14 @@ export default function ItineraryPage() {
           chase_length: chaseLength,
         }),
       });
+
       const data = await res.json();
-      console.log(data.itinerary);
+      console.log("Generated Itinerary:", data.itinerary);
+      sessionStorage.setItem("itinerary", JSON.stringify(data.itinerary));
+      router.push("/itinerary");
+
     } catch (err) {
-      console.error("Error:", err);
+      console.error("Error fetching itinerary:", err);
     } finally {
       setLoading(false);
     }
@@ -53,20 +59,22 @@ export default function ItineraryPage() {
 
       <h1 className="text-3xl font-semibold mb-6">Your Itinerary Map</h1>
 
-      <div className="flex flex-col md:flex-row gap-4 w-full max-w-md mb-6">
+      <div className="flex flex-col md:flex-row gap-4 max-w-md mb-6">
         <Input
           type="text"
           placeholder="City, State, Country"
+          className = "w-3xl"
           onChange={(e) => setLocation(e.target.value)}
         />
         <Input
           type="number"
           placeholder="# of locations"
+          className = "w-xl"
           onChange={(e) => setChaseLength(Number(e.target.value))}
         />
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" onClick={sendMessage}>
+            <Button variant="outline" onClick={fetchItinerary}>
               Generate Itinerary
             </Button>
           </DialogTrigger>
